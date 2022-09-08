@@ -7,153 +7,206 @@ const utils = new Utils();
 
 class Cat {
     CAT_MODEL_PATH = './src/models/cat.gltf';
-    MODEL = 'MODEL';
-    HIPS = 'HIPS';
+    MODEL = 'model';
 
-    LEFT_UP_LEG = 'LEFT_UP_LEG';
-    LEFT_LEG = 'LEFT_LEG';
-    LEFT_FOOT = 'LEFT_FOOT';
-    LEFT_TOE_BASE = 'LEFT_TOE_BASE';
+    SPINE0 = 'spine0';
+    SPINE1 = 'spine1';
+    SPINE2 = 'spine2';
+    SPINE3 = 'spine3';
+    SPINE4 = 'spine4';
+    SPINE5 = 'spine5';
+    SPINE6 = 'spine6';
 
-    RIGHT_UP_LEG = 'RIGHT_UP_LEG';
-    RIGHT_LEG = 'RIGHT_LEG';
-    RIGHT_FOOT = 'RIGHT_FOOT';
-    RIGHT_TOE_BASE = 'RIGHT_TOE_BASE';
+    TAIL0 = 'tail0';
+    TAIL1 = 'tail1';
+    TAIL2 = 'tail2';
+    TAIL3 = 'tail3';
+    TAIL4 = 'tail4';
 
-    SPINE0 = 'SPINE0';
-    SPINE1 = 'SPINE1';
-    SPINE2 = 'SPINE2';
-    SPINE3 = 'SPINE3';
+    FACE = 'face';
 
-    LEFT_SHOULDER = 'LEFT_SHOULDER';
-    LEFT_ARM = 'LEFT_ARM';
-    LEFT_FOREARM = 'LEFT_FOREARM';
-    LEFT_HAND = 'LEFT_HAND';
+    BREAST_C = 'BreastC';
+    SHOULDER_L = 'shoulderL';
+    UPPER_ARM_L = 'upper_armL';
+    FOREARM_L = 'forearmL';
+    HAND_L = 'handL';
+    F_TOE_L = 'f_toeL';
+    SHOULDER_R = 'shoulderR';
+    UPPER_ARM_R = 'upper_armR';
+    FOREARM_R = 'forearmR';
+    HAND_R = 'handR';
+    F_TOE_R = 'f_toeR';
+    BELLY_C = 'bellyC';
 
-    RIGHT_SHOULDER = 'RIGHT_SHOULDER';
-    RIGHT_ARM = 'RIGHT_ARM';
-    RIGHT_FOREARM = 'RIGHT_FOREARM';
-    RIGHT_HAND = 'RIGHT_HAND';
-
-    NECK0 = 'NECK0';
-    NECK1 = 'NECK1';
-    HEAD = 'HEAD';
-    EYE_L = 'EYE_L';
-    EYE_R = 'EYE_R';
-
-    TAIL0 = 'TAIL0';
-    TAIL1 = 'TAIL1';
-    TAIL2 = 'TAIL2';
-    TAIL3 = 'TAIL3';
-    TAIL4 = 'TAIL4';
-    TAIL5 = 'TAIL5';
-    TAIL6 = 'TAIL6';
+    PELVIS_L = 'pelvisL';
+    THIGH_L = 'thighL';
+    SHIN_L = 'shinL';
+    FOOT_L = 'footL';
+    R_TOE_L = 'r_toeL';
+    PELVIS_R = 'pelvisR';
+    THIGH_R = 'thighR';
+    SHIN_R = 'shinR';
+    FOOT_R = 'footR';
+    R_TOE_R = 'r_toeR';
+    PELVIS_C = 'pelvisC';
 
     constructor() {
         this.gltfLoader = null;
         this.loadedData = null;
         this.scene = null;
         this.model = null;
-
         this.parts = {
-            hips: null,
-
-            leftUpLeg: null,
-            leftLeg: null,
-            leftFoot: null,
-            leftToeBase: null,
-
-            rightUpLeg: null,
-            rightLeg: null,
-            rightFoot: null,
-            rightToeBase: null,
-
             spine0: null,
-            spine1: null,
-            spine2: null,
-            spine3: null,
-
-            leftShoulder: null,
-            leftArm: null,
-            leftForeArm: null,
-            leftHand: null,
-
-            rightShoulder: null,
-            rightArm: null,
-            rightForeArm: null,
-            rightHand: null,
-
-
-            neck0: null,
-            neck1: null,
-            head: null,
-            eyeL: null,
-            eyeR: null,
-
 
             tail0: null,
             tail1: null,
             tail2: null,
             tail3: null,
             tail4: null,
-            tail5: null,
-            tail6: null,
+
+            spine1: null,
+            spine2: null,
+            spine3: null,
+            spine4: null,
+            spine5: null,
+            spine6: null,
+
+            face: null,
+
+            breastC: null,
+            shoulderL: null,
+            upperarmL: null,
+            forearmL: null,
+            handL: null,
+            f_toeL: null,
+            shoulderR: null,
+            upperarmR: null,
+            forearmR: null,
+            handR: null,
+            f_toeR: null,
+            bellyC: null,
+
+            pelvisL: null,
+            thighL: null,
+            shinL: null,
+            footL: null,
+            r_toeL: null,
+
+            pelvisR: null,
+            thighR: null,
+            shinR: null,
+            footR: null,
+            r_toeR: null,
+
+            pelvisC: null
         }
+        const MODEL = 'model';
+
+        const SPINE0 = 'spine0';
+        const SPINE1 = 'spine1';
+        const SPINE2 = 'spine2';
+        const SPINE3 = 'spine3';
+        const SPINE4 = 'spine4';
+        const SPINE5 = 'spine5';
+        const SPINE6 = 'spine6';
+
+        const TAIL0 = 'tail0';
+        const TAIL1 = 'tail1';
+        const TAIL2 = 'tail2';
+        const TAIL3 = 'tail3';
+        const TAIL4 = 'tail4';
+
+        const FACE = 'face';
+
+        const BREAST_C = 'BreastC';
+        const SHOULDER_L = 'shoulderL';
+        const UPPER_ARM_L = 'upperL';
+        const FOREARM_L = 'forearmL';
+        const HAND_L = 'handL';
+        const F_TOE_L = 'f_toeL';
+        const SHOULDER_R = 'shoulderR';
+        const UPPER_ARM_R = 'upperR';
+        const FOREARM_R = 'forearmR';
+        const HAND_R = 'handR';
+        const F_TOE_R = 'f_toeR';
+        const BELLY_C = 'bellyC';
+
+        const PELVIS_L = 'pelvisL';
+        const THIGH_L = 'thighL';
+        const SHIN_L = 'shinL';
+        const FOOT_L = 'footL';
+        const R_TOE_L = 'r_toeL';
+        const PELVIS_R = 'pelvisR';
+        const THIGH_R = 'thighR';
+        const SHIN_R = 'shinR';
+        const FOOT_R = 'footR';
+        const R_TOE_R = 'r_toeR';
+        const PELVIS_C = 'pelvisC';
+        this.PARTS = [SPINE0, TAIL0, TAIL1, TAIL2, TAIL3, TAIL4,
+            SPINE1, SPINE2, SPINE3, SPINE4, SPINE5, SPINE6, FACE, BREAST_C, SHOULDER_L,
+            UPPER_ARM_L, FOREARM_L, HAND_L, F_TOE_L, SHOULDER_R, UPPER_ARM_R,
+            FOREARM_R, HAND_R, F_TOE_R, BELLY_C, PELVIS_L, THIGH_L, SHIN_L,
+            FOOT_L, R_TOE_L, PELVIS_R, THIGH_R, SHIN_R, FOOT_R, R_TOE_R, PELVIS_C]
     }
     async load() {
         this.gltfLoader = new GLTFLoader();
         this.data_loaded = await this.gltfLoader.loadAsync(this.CAT_MODEL_PATH);
         this.scene = this.data_loaded.scene;
-        this.scene.updateMatrixWorld(true);
-        this.model = this.scene.getObjectByName('Cat_Reference');
+        //this.scene.updateMatrixWorld(true);
+
+        
+        this.model = this.scene.getObjectByName('model');
+        console.log(this.model)
+        //utils.print_dump_object(this.model);
     }
 
     init() {
-        this.parts.hips = this.model.getObjectByName('Cat_Hips');
+        console.log(this.model);
+        this.parts.spine0 = this.model.getObjectByName(this.SPINE0);
 
-        this.parts.leftUpLeg = this.model.getObjectByName('Cat_LeftUpLeg');
-        this.parts.leftLeg = this.model.getObjectByName('Cat_LeftLeg');
-        this.parts.leftFoot = this.model.getObjectByName('Cat_LeftFoot');
-        this.parts.leftToeBase = this.model.getObjectByName('Cat_LeftToeBase');
+        this.parts.tail0 = this.model.getObjectByName(this.TAIL0);
+        this.parts.tail1 = this.model.getObjectByName(this.TAIL1);
+        this.parts.tail2 = this.model.getObjectByName(this.TAIL2);
+        this.parts.tail3 = this.model.getObjectByName(this.TAIL3);
+        this.parts.tail4 = this.model.getObjectByName(this.TAIL4);
 
-        this.parts.rightUpLeg = this.model.getObjectByName('Cat_RightUpLeg');
-        this.parts.rightLeg = this.model.getObjectByName('Cat_RightLeg');
-        this.parts.rightFoot = this.model.getObjectByName('Cat_RightFoot');
-        this.parts.rightToeBase = this.model.getObjectByName('Cat_RightToeBase');
+        this.parts.spine1 = this.model.getObjectByName(this.SPINE1);
+        this.parts.spine2 = this.model.getObjectByName(this.SPINE2);
+        this.parts.spine3 = this.model.getObjectByName(this.SPINE3);
+        this.parts.spine4 = this.model.getObjectByName(this.SPINE4);
+        this.parts.spine5 = this.model.getObjectByName(this.SPINE5);
+        this.parts.spine6 = this.model.getObjectByName(this.SPINE6);
 
-        this.parts.spine0 = this.model.getObjectByName('Cat_Spine');
-        this.parts.spine1 = this.model.getObjectByName('Cat_Spine1');
-        this.parts.spine2 = this.model.getObjectByName('Cat_Spine2');
-        this.parts.spine3 = this.model.getObjectByName('Cat_Spine3');
+        this.parts.face = this.model.getObjectByName(this.FACE);
 
-        this.parts.leftShoulder = this.model.getObjectByName('Cat_LeftShoulder');
-        this.parts.leftArm = this.model.getObjectByName('Cat_LeftArm');
-        this.parts.leftForeArm = this.model.getObjectByName('Cat_LeftForeArm');
-        this.parts.leftHand = this.model.getObjectByName('Cat_LeftHand');
+        this.parts.breastC = this.model.getObjectByName(this.BREAST_C);
+        this.parts.shoulderL = this.model.getObjectByName(this.SHOULDER_L);
+        this.parts.upperarmL = this.model.getObjectByName(this.UPPER_ARM_L);
+        this.parts.forearmL = this.model.getObjectByName(this.FOREARM_L);
+        this.parts.handL = this.model.getObjectByName(this.HAND_L);
+        this.parts.f_toeL = this.model.getObjectByName(this.F_TOE_L);
+        this.parts.shoulderR = this.model.getObjectByName(this.SHOULDER_R);
+        this.parts.upperarmR = this.model.getObjectByName(this.UPPER_ARM_R);
+        this.parts.forearmR = this.model.getObjectByName(this.FOREARM_R);
+        this.parts.handR = this.model.getObjectByName(this.HAND_R);
+        this.parts.f_toeR = this.model.getObjectByName(this.F_TOE_R);
+        this.parts.bellyC = this.model.getObjectByName(this.BELLY_C);
 
-        this.parts.rightShoulder = this.model.getObjectByName('Cat_RightShoulder');
-        this.parts.rightArm = this.model.getObjectByName('Cat_RightArm');
-        this.parts.rightForeArm = this.model.getObjectByName('Cat_RightForeArm');
-        this.parts.rightHand = this.model.getObjectByName('Cat_RightHand');
+        this.parts.pelvisL = this.model.getObjectByName(this.PELVIS_L);
+        this.parts.thighL = this.model.getObjectByName(this.THIGH_L);
+        this.parts.shinL = this.model.getObjectByName(this.SHIN_L);
+        this.parts.footL = this.model.getObjectByName(this.FOOT_L);
+        this.parts.r_toeL = this.model.getObjectByName(this.R_TOE_L);
 
-        this.parts.neck0 = this.model.getObjectByName('Cat_Neck');
-        this.parts.neck1 = this.model.getObjectByName('Cat_Neck1');
-        this.parts.head = this.model.getObjectByName('Cat_Head');
-        this.parts.eyeL = this.model.getObjectByName('Cat_EyeL');
-        this.parts.eyeR = this.model.getObjectByName('Cat_EyeR');
+        this.parts.pelvisR = this.model.getObjectByName(this.PELVIS_R);
+        this.parts.thighR = this.model.getObjectByName(this.THIGH_R);
+        this.parts.shinR = this.model.getObjectByName(this.SHIN_R);
+        this.parts.footR = this.model.getObjectByName(this.FOOT_R);
+        this.parts.r_toeR = this.model.getObjectByName(this.R_TOE_R);
 
-        this.parts.tail0 = this.model.getObjectByName('Cat_Tail');
-        this.parts.tail1 = this.model.getObjectByName('Cat_Tail1');
-        this.parts.tail2 = this.model.getObjectByName('Cat_Tail2');
-        this.parts.tail3 = this.model.getObjectByName('Cat_Tail3');
-        this.parts.tail4 = this.model.getObjectByName('Cat_Tail4');
-        this.parts.tail5 = this.model.getObjectByName('Cat_Tail5');
-        this.parts.tail6 = this.model.getObjectByName('Cat_TailEnd');
+        this.parts.pelvisC = this.model.getObjectByName(this.PELVIS_C);
 
-        this.model.scale.set(1, 1, 1);
-        this.setPosition(150, 121, -160, this.MODEL);
-        this.increaseRotation(0,0,0.6,this.MODEL)
-        utils.print_dump_object(this.model);
+        console.log(this.parts);
     }
 
 
@@ -173,28 +226,32 @@ class Cat {
         let part = this.findPart(partName);
         part.position.set(part.position.x, part.position.y, z);
     }
-    
+
     increasePosition(x, y, z, partName) {
         let part = this.findPart(partName);
-        part.position.set(part.position.x+x, part.position.y+y, part.position.z+z);
+        part.position.set(part.position.x + x, part.position.y + y, part.position.z + z);
     }
 
 
     setRotation(x, y, z, partName) {
         let part = this.findPart(partName);
-        part.rotation.set(x, y, z);
+        part.rotation._x = x;
+        part.rotation._y = y;
+        part.rotation._z = z;
+        this.model.children[1].skeleton.update();
+
     }
     increaseRotation(x, y, z, partName) {
         let part = this.findPart(partName);
-        part.rotation.set(part.rotation.x+x, part.rotation.y+y, part.rotation.z+z);
+        part.rotation.set(part.rotation.x + x, part.rotation.y + y, part.rotation.z + z);
     }
     setRotationX(x, partName) {
         let part = this.findPart(partName);
-        part.rotation.set(x, part.rotation.y, part.rotation.z);
+        part.rotation._x = x;
     }
     setRotationY(y, partName) {
         let part = this.findPart(partName);
-        part.rotation.set(part.rotation.x, y, part.rotation.z);
+        part.rotation._y = y;
     }
     setRotationZ(z, partName) {
         let part = this.findPart(partName);

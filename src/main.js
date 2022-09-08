@@ -2,14 +2,16 @@ import * as THREE from '../libs/three_js/three.module.js';
 import { Environment } from './environment.js';
 import { GUI } from '../libs/human_interface/dat.gui.module.js';
 import { OrbitControls } from '../libs/human_interface/OrbitControls.js';
-import {Cat} from './cat.js'
+import { Cat } from './cat.js'
 import { Utils } from './Utils.js'
+import { IdleCatAnimator } from './idleCatAnimator.js'
+import { MoveCatAnimator } from './moveCatAnimator.js'
 
 const utils = new Utils();
 
-let canvas, camera, scene, renderer, cubes, pixelRatio, width, height;
+let canvas, camera, scene, renderer, pixelRatio, width, height;
 
-let environment, cat;
+let environment, idleCat, idleCatAnimator, moveCat, moveCatAnimator;
 
 await load();
 init();
@@ -21,9 +23,13 @@ async function load() { //Async function to load all the models
     await environment.load();
 
 
-    //User controlled cat
-    cat = new Cat();
-    await cat.load();
+    //resting cat
+    idleCat = new Cat();
+    await idleCat.load();
+    //moving cat
+    //moveCat = new Cat();
+    //await moveCat.load();
+
 }
 
 function init() {
@@ -61,10 +67,43 @@ function init() {
 
     //Environment
     environment.init(scene);
-    cat.init(scene);
-    scene.add(cat.model);
-//    utils.print_dump_object(scene.cat.model);
+
+    //idleCat
+    idleCat.init();
+    scene.add(idleCat.model);
+    idleCatAnimator = new IdleCatAnimator(idleCat, environment);
+    idleCatAnimator.init();
+
+    //moving Cat
+    /*
+    moveCat.init();
+    scene.add(moveCat.model);
+    moveCatAnimator = new MoveCatAnimator(moveCat, environment);
+    moveCatAnimator.init();
+
+    const gui = new GUI();
+    console.log((moveCat.parts))
+
+    let folder = gui.addFolder('Model');
+    let part = moveCat.model;
+    folder.add(part.position, 'x', -2000, 2000, 0.01).name('X Position')
+    folder.add(part.position, 'y', -2000, 2000, 0.01).name('Y Position')
+    folder.add(part.position, 'z', -2000, 2000, 0.01).name('Z Position')
+
+    folder.open()
+    for (let i = 0; i < moveCat.PARTS.length; i++) {
+
+        let part = moveCat.parts[Object.keys(moveCat.parts)[i]];
+        let folder = gui.addFolder(part.name);
+        folder.add(part.rotation, 'x', 0, Math.PI * 2, 0.01).name('X Rotation')
+        folder.add(part.rotation, 'y', 0, Math.PI * 2, 0.01).name('Y Rotation')
+        folder.add(part.rotation, 'z', 0, Math.PI * 2, 0.01).name('Z Rotation')
+        folder.open();
+    }
+*/
+
 }
+
 
 function onWindowResize() {
     width = canvas.clientWidth * pixelRatio | 0;
@@ -76,8 +115,8 @@ function onWindowResize() {
 }
 
 function render() {
-    //time *= 0.001;  // convert time to seconds
-
+    idleCatAnimator.update();
+ //   moveCatAnimator.update();
     environment.updateReflectionCamera(renderer, scene, camera.position);
     renderer.render(scene, camera);
 

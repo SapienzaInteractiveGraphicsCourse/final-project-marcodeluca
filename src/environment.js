@@ -55,6 +55,14 @@ class Environment {
         this.scene = this.loadedData.scene;
         this.scene.scale.set(100, 100, 100);
         this.scene.updateMatrixWorld(true);
+        let gltfLoader = new GLTFLoader();
+        let loadedData= await gltfLoader.loadAsync('./src/models/human.gltf');
+        let model = loadedData.scene.children[0];
+        console.log(model)
+        loadedData.scene.scale.set(0.025,0.025,0.025);
+        console.log(loadedData)
+        this.scene.add(model);
+        console.log(this.scene)
     }
     init(scene) {
         this.room();
