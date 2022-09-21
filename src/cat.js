@@ -1,9 +1,7 @@
 
 import * as THREE from '../libs/three_js/three.module.js';
 import { GLTFLoader } from '../libs/loaders/GLTFLoader.js';
-import { Utils } from './Utils.js'
 
-const utils = new Utils();
 
 class Cat {
     CAT_MODEL_PATH = './src/models/cat.gltf';
@@ -152,16 +150,10 @@ class Cat {
         this.gltfLoader = new GLTFLoader();
         this.data_loaded = await this.gltfLoader.loadAsync(this.CAT_MODEL_PATH);
         this.scene = this.data_loaded.scene;
-        //this.scene.updateMatrixWorld(true);
-
-        
         this.model = this.scene.getObjectByName('model');
-        console.log(this.model)
-        //utils.print_dump_object(this.model);
     }
 
     init() {
-        console.log(this.model);
         this.parts.spine0 = this.model.getObjectByName(this.SPINE0);
 
         this.parts.tail0 = this.model.getObjectByName(this.TAIL0);
@@ -205,8 +197,6 @@ class Cat {
         this.parts.r_toeR = this.model.getObjectByName(this.R_TOE_R);
 
         this.parts.pelvisC = this.model.getObjectByName(this.PELVIS_C);
-
-        console.log(this.parts);
     }
 
 

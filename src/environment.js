@@ -1,9 +1,8 @@
 import * as THREE from '../libs/three_js/three.module.js';
 import { GLTFLoader } from '../libs/loaders/GLTFLoader.js';
-import { Utils } from './Utils.js'
-
-const utils = new Utils();
-
+import { Box } from './utils/box.js'
+import { Reflector } from './utils/reflector.js'
+import {TextGeometry} from './utils/textGeometry.js'
 class Environment {
     ENVIRONMENT_MODEL_PATH = './src/models/room.gltf';
     FLOOR_TEXTURE_PATH = './src/textures/Floor/Floor';
@@ -11,11 +10,8 @@ class Environment {
     PILLOW_TEXTURE_PATH = './src/textures/Couch/Pillow';
     WOOD_TEXTURE_PATH = './src/textures/Wood/Wood';
     METAL_TEXTURE_PATH = './src/textures/Metal/Metal';
-    STEAK_TEXTURE_PATH = './src/textures/Steak/Steak_basecolor.jpg';
     TVScreen;
-    TVRenderTarget;
-    TVcamera;
-    TVScene;
+    
     constructor() {
         this.gltfLoader = null;
         this.loadedData = null;
@@ -33,11 +29,18 @@ class Environment {
         this.couch1 = null;
         this.couchTexture = null;
 
-        this.woodTexture = null; //Unused
+        this.woodTexture = null;
         this.steakTexture = null;
         this.cubeCamera = null;
         this.cubeCamera2 = null;
 
+        this.walkBoxes = [];
+        this.boundaries = null;
+        this.carpets = []
+        this.chair = null
+        this.burger = null
+        this.ambientLight=null
+        this.pointLight=null
     }
 
     async load() {
@@ -50,29 +53,24 @@ class Environment {
         this.woodTexture = this.setupTexture(this.WOOD_TEXTURE_PATH, 10, 10);
         this.metalTexture = this.setupTexture(this.METAL_TEXTURE_PATH, 3, 3);
 
-        //this.steakTexture = this.textureLoader.load(this.STEAK_TEXTURE_PATH);
-
         this.scene = this.loadedData.scene;
         this.scene.scale.set(100, 100, 100);
         this.scene.updateMatrixWorld(true);
-        let gltfLoader = new GLTFLoader();
-        let loadedData= await gltfLoader.loadAsync('./src/models/human.gltf');
-        let model = loadedData.scene.children[0];
-        console.log(model)
-        loadedData.scene.scale.set(0.025,0.025,0.025);
-        console.log(loadedData)
-        this.scene.add(model);
-        console.log(this.scene)
+
     }
     init(scene) {
         this.room();
         this.lights(scene)
 
         scene.add(this.scene);
+        this.initBoxes()
     }
 
     room() {
-        //utils.print_dump_object(this.scene);
+        this.chair = this.scene.getObjectByName('Chair1')
+        this.chair.position.set(-2.53, 1.67, 5)
+        this.burger = this.scene.getObjectByName('burger')
+        this.burger.position.set(-2.7, 1.95, 4.9)
         this.floor = this.scene.getObjectByName('Floor');
         this.floor.material = this.setupMaterial(this.floorTexture, 0.00, 1.0);
         this.wallMaterial = new THREE.MeshPhongMaterial({ color: 0x135CA3 });
@@ -103,7 +101,6 @@ class Environment {
             this.couch2[i] = this.scene.getObjectByName(Couch2Parts[i]);
             this.couch1[i].material = this.couchMaterial;
             this.couch2[i].material = this.couchMaterial;
-
         }
         const colors = [0xff5650, 0xd3c7a2, 0x50bfff, 0xd3c7a2]
         for (let i = 0; i < 4; i++) {
@@ -119,33 +116,19 @@ class Environment {
         this.lampMaterial = this.setupMaterial(this.metalTexture, 0.00, 0.0);
         this.lampMaterial.metal = 1;
         this.lampMaterial.emissiveMap = this.metalTexture['roughness'];
-        //this.lampMaterial.emissiveIntensity=255;
-
-        const cubeRenderTarget1 = new THREE.WebGLCubeRenderTarget(1024, {
-            generateMipmaps: true,
-            minFilter: THREE.LinearMipmapLinearFilter,
-        })
-        this.cubeCamera = new THREE.CubeCamera(0.1, 1000, cubeRenderTarget1)
 
 
         this.lampBase = this.scene.getObjectByName('Lamp_2');
-        this.lampBase.material = new THREE.MeshStandardMaterial({
-            envMap: cubeRenderTarget1.texture,
-            color: 0xc8c8c8,
-            metalness: 1.0,
-            roughness: 0
-        })
-        this.lampBase.add(this.cubeCamera);
+        this.lampBase.material = this.lampMaterial
+
         this.lampHead = this.scene.getObjectByName('Light');
         this.lampHead.material = new THREE.MeshStandardMaterial({
             emissive: 0xFFFFFF,
-            emissiveIntensity: 40,
+            emissiveIntensity: 0.9,
             metalness: 1.0,
             roughness: 0
         })
-        //console.log(this.scene.getObjectByName('TV_holder').material);
-        //this.lampHead.material.emissive= 0xFFFFFF;
-        //this.lampHead.material.emissiveIntensity=100;
+
 
         //TV Table parts
         this.TVtableWood = this.scene.getObjectByName('Plane003_Plane001');
@@ -166,52 +149,14 @@ class Environment {
 
 
         //TV Screen and its reflection
-/*
-        this.TVRenderTarget = new THREE.WebGLRenderTarget(5000, 5000);
-        this.TVcamera = new THREE.PerspectiveCamera(120, 4.55 / 2.555, 0.001, 800);
-        this.TVcamera.position.set(-1.1 * 4.25, 1.8 * 2.75, -0.5);
-        this.TVcamera.updateProjectionMatrix();
-  */
-       //const camerahelper = new THREE.CameraHelper(this.TVcamera);
-        //this.scene.add(camerahelper);
-
-
-        this.TVScreen = new THREE.Mesh(new THREE.PlaneGeometry(4.55, 2.555), new THREE.MeshStandardMaterial({
-            color: 0x0c0c0c,
-            // Almost black, since the TV is turned off. Technically should be black, but that way there would be no reflection at all
-            //map: this.TVRenderTarget.texture,
-            metallic:1.0,
-            roughness: 0.05
+        this.TVScreen = new Reflector(new THREE.PlaneGeometry(4.55, 2.555), new THREE.MeshStandardMaterial({
+            color:   0x626262 //0x889999
         }));
         this.TVScreen.position.x = -4.385;
         this.TVScreen.position.y = 2.925;
         this.TVScreen.position.z = -0.5;
         this.TVScreen.rotation.y = Math.PI / 2;
         this.scene.add(this.TVScreen);
-
-//TV SCreen 2
-/*
-        const cubeRenderTarget2 = new THREE.WebGLCubeRenderTarget(1024, {
-            //generateMipmaps: true,
-            //minFilter: THREE.LinearMipmapLinearFilter,
-        })
-        this.cubeCamera2 = new THREE.CubeCamera(1, 1000, cubeRenderTarget2)
-
-
-        this.screen =  new THREE.Mesh(new THREE.BoxGeometry(0.1, 2.555, 4.55), new THREE.MeshStandardMaterial({
-            envMap: cubeRenderTarget2.texture,
-            color: 0xc8c8c8,
-            metalness: 1.0,
-            roughness: 0.05
-        }));
-        this.screen.position.x = -4.385;
-        this.screen.position.y = 2.925;
-        this.screen.position.z = -0.5;
-        //this.scene.add(this.screen);
-        //this.screen.add(this.cubeCamera2);
-*/
-//End tv screen
-
         this.TV = this.scene.getObjectByName('Plane_5'); // Samsung Logo holder
         this.TV = this.scene.getObjectByName('Plane_6'); // TV Lower Edge
         this.TV.material = this.metalMaterial;
@@ -234,41 +179,28 @@ class Environment {
         this.scene.getObjectByName('Cube007').material = this.pillowMaterial.clone(); //Upper part
         this.scene.getObjectByName('Cube007').material.color.set(0xd3c7a2);
 
+        //Carpets
+        this.carpets = [this.scene.getObjectByName('CarpetCouch'), this.scene.getObjectByName('CarpetTable')]
+        this.carpets[0].material = this.pillowMaterial.clone();
+        this.carpets[0].material.color.set(0xff5650);
+        this.carpets[1].material = this.pillowMaterial.clone();
+        this.carpets[1].material.color.set(0xff5650);
     }
     lights(scene) {
         //Ambient lighting
         const AMBIENT_LIGHT_COLOR = 0xFFFFFF;
         const AMBIENT_LIGHT_INTENSITY = 0.3;
 
-        const ambientLight = new THREE.AmbientLight(AMBIENT_LIGHT_COLOR, AMBIENT_LIGHT_INTENSITY);
-        scene.add(ambientLight);
+        this.ambientLight = new THREE.AmbientLight(AMBIENT_LIGHT_COLOR, AMBIENT_LIGHT_INTENSITY);
+        scene.add(this.ambientLight);
 
         //Lamp light
         const color = 0xFFFFFF;
-        const intensity = 0.7;
-        const light = new THREE.PointLight(color, intensity,);
-        light.position.set(400, 355, 550);
-        const helper = new THREE.PointLightHelper(light, 5, 0xFF0000);
-        //scene.add(helper);
-        scene.add(light);
+        const intensity = 0.9;
+        this.pointLight = new THREE.PointLight(color, intensity,);
+        this.pointLight.position.set(400, 355, 550);
+        scene.add(this.pointLight);
 
-    }
-
-    updateReflectionCamera(renderer$, scene$, eyeposition) {
-        let lookat;
-        const currentRenderTarget = renderer$.getRenderTarget();
-        this.cubeCamera.update(renderer$, scene$);
-        //this.cubeCamera2.update(renderer$, scene$);
-/*
-        lookat = new THREE.Vector3((eyeposition.x),
-            ((this.TVcamera.position.y) - eyeposition.y),
-            (this.TVcamera.position.z - eyeposition.z))
-        this.TVcamera.lookAt(lookat);
-        this.TVcamera.updateProjectionMatrix();
-        renderer$.setRenderTarget(this.TVRenderTarget);
-        renderer$.render(scene$, this.TVcamera);
-        */
-        renderer$.setRenderTarget(currentRenderTarget);
     }
 
     setupTexture(path, X, Y) {
@@ -302,8 +234,21 @@ class Environment {
         texture.wrapS = THREE.RepeatWrapping;
         texture.repeat.set(X, Y);
     }
-    setupReflection() {
 
+    initBoxes() {
+        this.boundaries = new Box([-470, -320], [500, 750])
+        this.walkBoxes.push(new Box([-470, -320], [-240, 250]))
+        this.walkBoxes.push(new Box([-470, 230], [-335, 320]))
+        this.walkBoxes.push(new Box([-470, 310], [-160, 700]))
+        this.walkBoxes.push(new Box([-170, 385], [-130, 590]))
+        this.walkBoxes.push(new Box([280, 440], [500, 655]))
+        this.walkBoxes.push(new Box([-15, -320], [361, -140]))
+        this.walkBoxes.push(new Box([319, -320], [500, 140]))
+
+    }
+    updateLampLight(){
+        this.lampHead.material.emissive=this.pointLight.color
+        this.lampHead.material.emissiveIntensity=this.pointLight.intensity
     }
 }
 export { Environment };
