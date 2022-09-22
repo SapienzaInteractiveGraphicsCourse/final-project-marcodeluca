@@ -249,6 +249,7 @@ class CatAnimator {
                 , w: 0.2092387
             }
         }
+        /*
         this.stretchConfiguration = {
             model: { x: 0, y: 0, z: 0, w: 1 },
             spine0: {
@@ -557,9 +558,9 @@ class CatAnimator {
                 , w: 0.2768992
 
             }
-        }
+        }*/
         this.tweensRest = [];
-        this.tweensStretch = [];
+        //this.tweensStretch = [];
     }
 
     init() {
@@ -571,6 +572,7 @@ class CatAnimator {
             tween.update()
         }
         this.stop(this.tweensRest)
+        /*
         this.tweensStretch = this.setupTween(this.stretchConfiguration, 2500);
         for (var tween of this.tweensStretch) {
             tween.easing(TWEEN.Easing.Quadratic.Out)
@@ -578,6 +580,8 @@ class CatAnimator {
             tween.repeat(Infinity)
             tween.delay(5000)
         }
+        this.start(this.tweensStretch)
+        */
 
     }
 

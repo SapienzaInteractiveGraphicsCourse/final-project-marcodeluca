@@ -106,6 +106,7 @@ function init() {
     folder.addColor(new ColorGUIHelper(environment.pointLight, 'color'), 'value').name("Lamp Color")
     folder.add(environment.pointLight, 'intensity', 0.0, 1.0, 0.01).name("Lamp Intensity")
     folder.open()
+
 }
 
 

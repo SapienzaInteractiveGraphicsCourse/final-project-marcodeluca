@@ -2,7 +2,6 @@ import * as THREE from '../libs/three_js/three.module.js';
 import { GLTFLoader } from '../libs/loaders/GLTFLoader.js';
 import { Box } from './utils/box.js'
 import { Reflector } from './utils/reflector.js'
-import {TextGeometry} from './utils/textGeometry.js'
 class Environment {
     ENVIRONMENT_MODEL_PATH = './src/models/room.gltf';
     FLOOR_TEXTURE_PATH = './src/textures/Floor/Floor';
@@ -150,7 +149,7 @@ class Environment {
 
         //TV Screen and its reflection
         this.TVScreen = new Reflector(new THREE.PlaneGeometry(4.55, 2.555), new THREE.MeshStandardMaterial({
-            color:   0x626262 //0x889999
+            color:  0x202020//  0x626262 //0x889999
         }));
         this.TVScreen.position.x = -4.385;
         this.TVScreen.position.y = 2.925;

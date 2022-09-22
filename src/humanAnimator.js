@@ -14,6 +14,7 @@ class HumanAnimator {
         this.direction = 1;   //1=Positive Z, 2= Positive X, -1=Negative Z, -2 = Negative X
         this.tweenGroup;
 
+        this.goingIdle = false
         this.stopCommanded = false
         this.interacting = false
         this.idleConfiguration = {
@@ -1280,7 +1281,7 @@ class HumanAnimator {
     }
 
     startWalking() {
-        if (!this.walking && !this.interacting) {
+        if (!this.walking && !this.interacting && !this.goingIdle) {
             this.walking = true;
             this.start(this.tweensWalkStartRight);
             this.moveHuman();
@@ -1289,7 +1290,8 @@ class HumanAnimator {
     }
 
     stopWalking() {
-        if (!this.stopped) {
+        if (!this.stopped && !this.goingIdle) {
+            this.goingIdle=true
             if (this.tweenMovement) {
                 this.tweenMovement.stop()
             }
@@ -1298,6 +1300,7 @@ class HumanAnimator {
             this.tweensIdle[0].onComplete(() => {
                 this.tweensWalkStartRight = this.setupTweenQuaternions(this.walkStartRightConfiguration, 500);
                 this.chain(this.tweensWalkStartRight, this.tweensWalkEndRight)
+                this.goingIdle=false
             })
             this.start(this.tweensIdle)
 
@@ -1517,9 +1520,9 @@ class HumanAnimator {
         tweens.push(this.setupTweenPosition(new THREE.Vector3(320, 0, -50), 0))
         let tweens1 = this.setupTweenXYZ(this.sitOnCouchStartConfiguration, 500)
         tweens1.push(this.setupTweenPosition(new THREE.Vector3(400, -65, -50), 500))
-        this.chain(tweens, tweens1)
         let tweens2 = this.setupTweenXYZ(this.sitOnCouchEndConfiguration, 500)
         tweens2.push(this.setupTweenPosition(new THREE.Vector3(400, -115, -50), 500))
+        this.chain(tweens, tweens1)
         this.chain(tweens1, tweens2)
         this.start(tweens)
     }
