@@ -1,4 +1,4 @@
-import * as TWEEN from '../libs/tween_js/tween.esm.js';
+import * as TWEEN from '../libs/tweenjs/tween.esm.js';
 import * as THREE from '../libs/three_js/three.module.js';
 import { Box } from './utils/box.js'
 

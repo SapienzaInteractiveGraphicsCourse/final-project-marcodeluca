@@ -1,4 +1,4 @@
-import * as TWEEN from '../libs/tween_js/tween.esm.js';
+import * as TWEEN from '../libs/tweenjs/tween.esm.js';
 class CatAnimator {
     constructor(cat, environment) {
 
